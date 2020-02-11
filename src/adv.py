@@ -1,6 +1,15 @@
 from room import Room
+from player import Player
+import time
+from move_logic import *
 
 # Declare all the rooms
+
+def dots(n):
+    for i in range(n):
+        time.sleep(.17)
+        print('*')
+
 
 room = {
     'outside':  Room("Outside Cave Entrance",
@@ -38,6 +47,15 @@ room['treasure'].s_to = room['narrow']
 #
 
 # Make a new player object that is currently in the 'outside' room.
+player = Player('matthew', room['outside'])
+
+print(f'Hello {player.name}! Welcome to the game!')
+
+dots(5)
+
+
+move = input("Type press anything to start!")
+dots(2)
 
 # Write a loop that:
 #
@@ -49,3 +67,16 @@ room['treasure'].s_to = room['narrow']
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
+
+while move != 'q':
+    dots(5)
+    print(f"Location: {player.current_room.name}")
+    dots(2)
+    print(f"{player.current_room.description}")
+    dots(2)
+    move = move_check()
+
+    try:
+        player.current_room = getattr(player.current_room, f'{move}_to')
+    except:
+        print('You hit a wall, try again')
