@@ -2,6 +2,7 @@ from room import Room
 from player import Player
 import time
 from move_logic import *
+from item import Item
 
 # Declare all the rooms
 
@@ -13,14 +14,15 @@ def dots(n):
 
 room = {
     'outside':  Room("Outside Cave Entrance",
-                     "North of you, the cave mount beckons"),
+                     "North of you, the cave mount beckons", [Item('knife', '🔪')]),
 
     'foyer':    Room("Foyer", """Dim light filters in from the south. Dusty
-passages run north and east."""),
+passages run north and east.""", [Item('sword', '⚔️'), Item('hammer', '🔨')]),
 
     'overlook': Room("Grand Overlook", """A steep cliff appears before you, falling
 into the darkness. Ahead to the north, a light flickers in
-the distance, but there is no way across the chasm."""),
+the distance, but there is no way across the chasm.""", 
+[Item('gun', '🔫'), Item('rope', '📿')]),
 
     'narrow':   Room("Narrow Passage", """The narrow passage bends here from west
 to north. The smell of gold permeates the air."""),
@@ -54,7 +56,7 @@ print(f'Hello {player.name}! Welcome to the game!')
 dots(5)
 
 
-move = input("Type press anything to start!")
+move = input("Type press anything to start or press q to quit!")
 dots(2)
 
 # Write a loop that:
@@ -74,9 +76,29 @@ while move != 'q':
     dots(2)
     print(f"{player.current_room.description}")
     dots(2)
+    proom_items(player.current_room)
+    dots(1)
+    puser_items(player)
     move = move_check()
+   
+    if move in ['n', 'e', 's', 'w']:
+        try:
+            player.current_room = getattr(player.current_room, f'{move}_to')
+        except:
+            print('You hit a wall, try again')
+    else:
+        if move.lower().split(' ')[0] == 'get':
+            try:
+                res = get_item(player.current_room, move)
+                player.item.append(res)
+                player.current_room.item.remove(res)
+            except:
+                print('Item not in room')
 
-    try:
-        player.current_room = getattr(player.current_room, f'{move}_to')
-    except:
-        print('You hit a wall, try again')
+        else:
+            try:      
+                res = get_item(player, move)
+                player.current_room.item.append(res)
+                player.item.remove(res)
+            except:
+                print('You do not have this item.')
