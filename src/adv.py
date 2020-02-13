@@ -92,6 +92,7 @@ while move != 'q':
                 res = get_item(player.current_room, move)
                 player.item.append(res)
                 player.current_room.item.remove(res)
+                print(player.item[-1].on_take)
             except:
                 print('Item not in room')
 
@@ -100,5 +101,6 @@ while move != 'q':
                 res = get_item(player, move)
                 player.current_room.item.append(res)
                 player.item.remove(res)
+                print(player.current_room.item[-1].on_take)
             except:
                 print('You do not have this item.')
